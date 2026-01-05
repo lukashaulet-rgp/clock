@@ -1,21 +1,30 @@
 import time
-while True:
-    t = time.localtime()
-    h = t.tm_hour
-    m = t.tm_min
-    s = t.tm_sec
 
-    print(f"{h:02d}:{m:02d}:{s:02d}")
-    time.sleep(1)
-
-    def afficher_heure(heure):
+def afficher_heure(heure):
         h, m, s = heure
         print(f"{h:02d}:{m:02d}:{s:02d}")
 
-    while True:
-        t = time.localtime()
-        heure = (t.tm_hour, t.tm_min, t.tm_sec)
+h = int(input("Heures (0-23) : "))
+m = int(input("Minutes (0-59) : "))
+s = int(input("Secondes (0-59) : "))
 
+heure = (h, m, s)
+
+while True:
         afficher_heure(heure)
         time.sleep(1)
+
+        h, m, s = heure
+        s = s + 1
+
+        if s == 60:
+                s = 0
+                m = m + 1
+        if m == 60:
+                m = 0
+                h = h + 1
+        if h == 24:
+                h = 0
+        heure = (h, m, s)
+
 
