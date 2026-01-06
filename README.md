@@ -56,3 +56,26 @@ CTRL + C ou stop
 - Synchronisation des accès grâce à **threading.Lock**
 
 ## Installation et exécution
+
+### Prérequis
+
+Python 3 instaallé sur la machine
+
+### Lancer le programme
+
+Dans un terminal, se placer dans le dossier du projet puis exécuter : **python clock.py**
+
+## Fonctionnalités bonus
+
+Les fonctionnalités suivantes font partie des bonus de l'énoncé du projet
+
+- Mode d'affichage 12h / 24h (AM /PM)
+- Mise en pause et reprise de l'horloge
+
+## Conclusion
+
+Ce projet permet de mettre en pratique :
+- La manipulation du temps en Python
+- L'utilisation de fonctions
+- La gestion des entrées utilisateur en temps réel
+- Les bases du multithreading et de la syncrhronisation
