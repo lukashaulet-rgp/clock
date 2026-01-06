@@ -1,5 +1,6 @@
 import time
 import threading
+import sys
 
 
 def format_time(h, m, s):
@@ -52,7 +53,8 @@ def display_loop(state):
             alarm = state["alarm_time"]
 
         # Affichage sur une seule ligne
-        print(f"Heure Actuelle : {format_time(h, m, s)}")
+        sys.stdout.write("\rHeure Actuelle : " + format_time(h, m, s) + "   ")
+        sys.stdout.flush()
 
         # Vérification du déclenchement de l'alarme
         if alarm is not None and (h, m, s) == alarm:
@@ -100,10 +102,10 @@ def command_loop(state):
 
                 if command == "h":
                     set_time(state, (hh, mm, ss))
-                    print(f"Heure réglée à {hh:02d} : {mm:02d} : {ss:02d}")
+                    print(f"\nHeure réglée à {hh:02d}:{mm:02d}:{ss:02d}")
                 else:
                     set_alarm(state, (hh, mm, ss))
-                    print(f"Alarme réglée à {hh:02d} : {mm:02d} : {ss:02d}")
+                    print(f"\nAlarme réglée à {hh:02d}:{mm:02d}:{ss:02d}")
             
             except ValueError:
                 print("Erreur : format attendu -> h HH MM SS or a HH MM SS")
@@ -113,9 +115,10 @@ def command_loop(state):
 
 def main():
 
-    # Etat partagé du programme
+    now = time.localtime()
+
     state = {
-        "current_time": (16, 30, 0),
+        "current_time": (now.tm_hour, now.tm_min, now.tm_sec),
         "alarm_time": None,
         "running": True,
         "lock": threading.Lock(),
