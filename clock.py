@@ -1,15 +1,12 @@
-def incrementer_heure(h, m, s):
-    s = s + 1
-    
-    if s >= 60:
-        s = 0
-        m = m + 1
-    
-    if m >= 60:
-        m = 0
-        h = h + 1
-    
-    if h >= 24:
-        h = 0
-    
-    return (h, m, s)
+def afficher_heure(tuple_heure):
+    global heure_personnalisee
+    heure_personnalisee = tuple_heure
+
+# Configuration heure perso
+choix_heure = input("Voulez-vous régler une heure personnalisée ? (oui/non) : ")
+
+if choix_heure == "oui":
+    h = int(input("Entrez les heures (0-23) : "))
+    m = int(input("Entrez les minutes (0-59) : "))
+    s = int(input("Entrez les secondes (0-59) : "))
+    afficher_heure((h, m, s))
