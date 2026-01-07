@@ -1,12 +1,12 @@
-def afficher_heure(tuple_heure):
-    global heure_personnalisee
-    heure_personnalisee = tuple_heure
+def regler_alarme(tuple_heure):
+    global alarme
+    alarme = tuple_heure
 
-# Configuration heure perso
-choix_heure = input("Voulez-vous régler une heure personnalisée ? (oui/non) : ")
+# Configuration alarme
+choix_alarme = input("Voulez-vous régler une alarme ? (oui/non) : ")
 
-if choix_heure == "oui":
-    h = int(input("Entrez les heures (0-23) : "))
-    m = int(input("Entrez les minutes (0-59) : "))
-    s = int(input("Entrez les secondes (0-59) : "))
-    afficher_heure((h, m, s))
+if choix_alarme == "oui":
+    h = int(input("Entrez les heures de l'alarme (0-23) : "))
+    m = int(input("Entrez les minutes de l'alarme (0-59) : "))
+    s = int(input("Entrez les secondes de l'alarme (0-59) : "))
+    regler_alarme((h, m, s))
