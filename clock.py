@@ -2,7 +2,6 @@ import time
 import threading
 import sys
 
-
 def format_time(h, m, s, display_mode):
     # Affiche l'heure selon le mode 24h ou 12h (AM/PM)
     if display_mode == "12":
