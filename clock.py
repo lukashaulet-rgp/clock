@@ -1,26 +1,7 @@
-print("")
-print("Horloge en cours... (Ctrl+C pour arrêter)")
-print("")
+def arreter_horloge():
+    print("\n")
+    print("Horloge arrêtée. A bientôt Mamie Jeannine !")
 
-try:
-    while True:
-        
-        if heure_personnalisee is not None:
-            heures, minutes, secondes = heure_personnalisee
-            heure_personnalisee = incrementer_heure(heures, minutes, secondes)
-        else:
-            maintenant = datetime.now()
-            heures = maintenant.hour
-            minutes = maintenant.minute
-            secondes = maintenant.second
-        
-        print(f"\r{heures:02d}:{minutes:02d}:{secondes:02d}", end="", flush=True)
-        
-        if alarme is not None:
-            if (heures, minutes, secondes) == alarme:
-                print("\nDRIIIING ! C'est l'heure Mamie Jeannine !")
-        
-        time.sleep(1)
-
+# Modification du except:
 except KeyboardInterrupt:
-    pass
+    arreter_horloge()
