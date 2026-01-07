@@ -152,7 +152,7 @@ class TextBox:
 # Main
 def main():
     pygame.init()
-    pygame.display.set_caption("Horloge Moderne (noir/or) - complète")
+    pygame.display.set_caption("Horloge de mamie Jeannine")
 
     W, H = 1100, 720
     screen = pygame.display.set_mode((W, H))
@@ -285,7 +285,7 @@ def main():
 
     running = True
 
-    # --- Quit confirmation + fade-out ---
+    # Quit confirmation + fade-out
     quit_confirm = False
     fading_out = False
     fade_alpha = 0
