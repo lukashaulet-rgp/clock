@@ -403,7 +403,7 @@ def main():
         screen.fill(BG)
 
         # Header
-        screen.blit(font_title.render("Horloge moderne (noir/or) — complète", True, (210, 210, 210)), (24, 18))
+        screen.blit(font_title.render("Horloge de mamie Jeannine", True, (210, 210, 210)), (24, 18))
 
         # Cadran
         dial_rect = dial_surf.get_rect(center=(cx, cy))
