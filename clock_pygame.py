@@ -3,9 +3,7 @@ import time
 import pygame
 import pygame.gfxdraw
 
-# -----------------------------
 # Helpers
-# -----------------------------
 def polar_to_xy(cx, cy, radius, angle_rad):
     """0 rad = en haut (12h). Sens horaire."""
     x = cx + radius * math.sin(angle_rad)
@@ -89,9 +87,7 @@ def parse_hms(s):
         raise ValueError("Heure invalide (0-23 / 0-59 / 0-59)")
     return h, m, sec
 
-# -----------------------------
 # UI
-# -----------------------------
 class Button:
     def __init__(self, rect, text, font):
         self.rect = pygame.Rect(rect)
@@ -153,9 +149,7 @@ class TextBox:
     def get_value(self):
         return self.text.strip()
 
-# -----------------------------
 # Main
-# -----------------------------
 def main():
     pygame.init()
     pygame.display.set_caption("Horloge Moderne (noir/or) - complète")
@@ -252,9 +246,7 @@ def main():
     # tick 1 seconde (logique)
     last_tick_ms = pygame.time.get_ticks()
 
-    # -----------------------------
     # UI panel à droite (layout auto)
-    # -----------------------------
     panel_x = 740
     panel_w = 330
     panel_rect = pygame.Rect(panel_x, 90, panel_w, 560)
@@ -292,6 +284,13 @@ def main():
     alarm_popup_until = 0
 
     running = True
+
+    # --- Quit confirmation + fade-out ---
+    quit_confirm = False
+    fading_out = False
+    fade_alpha = 0
+    FADE_SPEED = 12  # plus grand = plus rapide
+
     while running:
         mouse_pos = pygame.mouse.get_pos()
         now_ms = pygame.time.get_ticks()
@@ -312,7 +311,27 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                # Même comportement que ÉCHAP : demander confirmation
+                if not fading_out:
+                    quit_confirm = True
+
+            # Gestion clavier (solution recommandée : événement KEYDOWN)
+            if event.type == pygame.KEYDOWN:
+                # Si la popup de confirmation est affichée
+                if quit_confirm and not fading_out:
+                    if event.key in (pygame.K_y, pygame.K_RETURN):  # Oui
+                        fading_out = True
+                    elif event.key in (pygame.K_n, pygame.K_ESCAPE):  # Non
+                        quit_confirm = False
+                # Sinon, ÉCHAP ouvre la popup
+                elif not quit_confirm and not fading_out:
+                    if event.key == pygame.K_ESCAPE:
+                        quit_confirm = True
+
+            # Tant qu'on est dans la confirmation (et pas en fade),
+            # on bloque les interactions (boutons / champs)
+            if quit_confirm and not fading_out:
+                continue
 
             tb_time.handle_event(event)
             tb_alarm.handle_event(event)
@@ -450,6 +469,41 @@ def main():
             pygame.draw.rect(screen, GOLD, box, 2, border_radius=18)
             text = pygame.font.SysFont("Segoe UI", 72).render("!!! ALARME !!!", True, GOLD)
             screen.blit(text, text.get_rect(center=box.center))
+
+        # Popup confirmation quitter
+        if quit_confirm and not fading_out:
+            overlay = pygame.Surface((W, H), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 170))
+            screen.blit(overlay, (0, 0))
+
+            box = pygame.Rect(260, 250, 580, 180)
+            pygame.draw.rect(screen, (25, 25, 28), box, border_radius=18)
+            pygame.draw.rect(screen, GOLD, box, 2, border_radius=18)
+
+            title = pygame.font.SysFont("Segoe UI", 32).render(
+                "Êtes-vous sûr de vouloir quitter ?",
+                True,
+                (235, 235, 235),
+            )
+            screen.blit(title, title.get_rect(center=(box.centerx, box.y + 55)))
+
+            hint = pygame.font.SysFont("Segoe UI", 20).render(
+                "Oui : Entrée / Y     —     Non : N / Échap",
+                True,
+                (190, 190, 190),
+            )
+            screen.blit(hint, hint.get_rect(center=(box.centerx, box.y + 120)))
+
+        # Fade-out élégant (sortie)
+        if fading_out:
+            fade_alpha = min(255, fade_alpha + FADE_SPEED)
+            fade = pygame.Surface((W, H))
+            fade.fill((0, 0, 0))
+            fade.set_alpha(fade_alpha)
+            screen.blit(fade, (0, 0))
+
+            if fade_alpha >= 255:
+                running = False
 
         pygame.display.flip()
         fps.tick(60)
