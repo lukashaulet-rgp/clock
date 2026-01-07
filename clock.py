@@ -1,12 +1,26 @@
-def regler_alarme(tuple_heure):
-    global alarme
-    alarme = tuple_heure
+print("")
+print("Horloge en cours... (Ctrl+C pour arrêter)")
+print("")
 
-# Configuration alarme
-choix_alarme = input("Voulez-vous régler une alarme ? (oui/non) : ")
+try:
+    while True:
+        
+        if heure_personnalisee is not None:
+            heures, minutes, secondes = heure_personnalisee
+            heure_personnalisee = incrementer_heure(heures, minutes, secondes)
+        else:
+            maintenant = datetime.now()
+            heures = maintenant.hour
+            minutes = maintenant.minute
+            secondes = maintenant.second
+        
+        print(f"\r{heures:02d}:{minutes:02d}:{secondes:02d}", end="", flush=True)
+        
+        if alarme is not None:
+            if (heures, minutes, secondes) == alarme:
+                print("\nDRIIIING ! C'est l'heure Mamie Jeannine !")
+        
+        time.sleep(1)
 
-if choix_alarme == "oui":
-    h = int(input("Entrez les heures de l'alarme (0-23) : "))
-    m = int(input("Entrez les minutes de l'alarme (0-59) : "))
-    s = int(input("Entrez les secondes de l'alarme (0-59) : "))
-    regler_alarme((h, m, s))
+except KeyboardInterrupt:
+    pass
