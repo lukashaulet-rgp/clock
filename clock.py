@@ -1,11 +1,15 @@
-import time 
-from datetime import datetime
-
-# Variables globales
-heure_personnalisee = None
-alarme = None
-
-# Intituler
-print("=== HORLOGE POUR MAMI ===")
-print("")
-
+def incrementer_heure(h, m, s):
+    s = s + 1
+    
+    if s >= 60:
+        s = 0
+        m = m + 1
+    
+    if m >= 60:
+        m = 0
+        h = h + 1
+    
+    if h >= 24:
+        h = 0
+    
+    return (h, m, s)
