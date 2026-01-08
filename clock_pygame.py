@@ -3,7 +3,9 @@ import time
 import pygame
 import pygame.gfxdraw
 
+# -----------------------------
 # Helpers
+# -----------------------------
 def polar_to_xy(cx, cy, radius, angle_rad):
     """0 rad = en haut (12h). Sens horaire."""
     x = cx + radius * math.sin(angle_rad)
@@ -87,7 +89,9 @@ def parse_hms(s):
         raise ValueError("Heure invalide (0-23 / 0-59 / 0-59)")
     return h, m, sec
 
+# -----------------------------
 # UI
+# -----------------------------
 class Button:
     def __init__(self, rect, text, font):
         self.rect = pygame.Rect(rect)
@@ -149,10 +153,12 @@ class TextBox:
     def get_value(self):
         return self.text.strip()
 
+# -----------------------------
 # Main
+# -----------------------------
 def main():
     pygame.init()
-    pygame.display.set_caption("Horloge de mamie Jeannine")
+    pygame.display.set_caption("Horloge Moderne (noir/or) - complète")
 
     W, H = 1100, 720
     screen = pygame.display.set_mode((W, H))
@@ -246,7 +252,9 @@ def main():
     # tick 1 seconde (logique)
     last_tick_ms = pygame.time.get_ticks()
 
+    # -----------------------------
     # UI panel à droite (layout auto)
+    # -----------------------------
     panel_x = 740
     panel_w = 330
     panel_rect = pygame.Rect(panel_x, 90, panel_w, 560)
@@ -283,14 +291,13 @@ def main():
     message_until = 0
     alarm_popup_until = 0
 
-    running = True
-
-    # Quit confirmation + fade-out
+    # --- Quit confirmation + fade-out ---
     quit_confirm = False
     fading_out = False
     fade_alpha = 0
     FADE_SPEED = 12  # plus grand = plus rapide
 
+    running = True
     while running:
         mouse_pos = pygame.mouse.get_pos()
         now_ms = pygame.time.get_ticks()
@@ -311,25 +318,24 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                # Même comportement que ÉCHAP : demander confirmation
-                if not fading_out:
-                    quit_confirm = True
+                quit_confirm = True
 
-            # Gestion clavier (solution recommandée : événement KEYDOWN)
+            # Quitter avec confirmation (solution recommandée = KEYDOWN)
             if event.type == pygame.KEYDOWN:
-                # Si la popup de confirmation est affichée
+                # Si on est dans la confirmation
                 if quit_confirm and not fading_out:
-                    if event.key in (pygame.K_y, pygame.K_RETURN):  # Oui
+                    if event.key in (pygame.K_y, pygame.K_RETURN):   # Oui
                         fading_out = True
-                    elif event.key in (pygame.K_n, pygame.K_ESCAPE):  # Non
+                    elif event.key in (pygame.K_n, pygame.K_ESCAPE): # Non
                         quit_confirm = False
-                # Sinon, ÉCHAP ouvre la popup
+
+                # Si on n'est PAS dans la confirmation
                 elif not quit_confirm and not fading_out:
                     if event.key == pygame.K_ESCAPE:
                         quit_confirm = True
 
             # Tant qu'on est dans la confirmation (et pas en fade),
-            # on bloque les interactions (boutons / champs)
+            # on bloque le reste des interactions
             if quit_confirm and not fading_out:
                 continue
 
@@ -403,15 +409,23 @@ def main():
         screen.fill(BG)
 
         # Header
-        screen.blit(font_title.render("Horloge de mamie Jeannine", True, (210, 210, 210)), (24, 18))
+        screen.blit(font_title.render("Horloge moderne (noir/or) — complète", True, (210, 210, 210)), (24, 18))
 
         # Cadran
         dial_rect = dial_surf.get_rect(center=(cx, cy))
         screen.blit(dial_surf, dial_rect)
 
         # Angle "fluide" des secondes pour l'affichage
-        frac = (pygame.time.get_ticks() % 1000) / 1000.0
-        sec_display = cur_s + (0 if paused else frac)
+        # IMPORTANT: on aligne la fraction de seconde sur le tick interne (last_tick_ms),
+        # sinon l'aiguille des secondes "saute" quand cur_s change.
+        frac = 0.0
+        if not paused:
+            frac = (now_ms - last_tick_ms) / 1000.0
+            if frac < 0.0:
+                frac = 0.0
+            if frac > 0.999:
+                frac = 0.999
+        sec_display = cur_s + frac
 
         hour12 = cur_h % 12
         ang_s = (sec_display / 60.0) * 2 * math.pi
@@ -480,28 +494,19 @@ def main():
             pygame.draw.rect(screen, (25, 25, 28), box, border_radius=18)
             pygame.draw.rect(screen, GOLD, box, 2, border_radius=18)
 
-            title = pygame.font.SysFont("Segoe UI", 32).render(
-                "Êtes-vous sûr de vouloir quitter ?",
-                True,
-                (235, 235, 235),
-            )
+            title = pygame.font.SysFont("Segoe UI", 32).render("Êtes-vous sûr de vouloir quitter ?", True, (235, 235, 235))
             screen.blit(title, title.get_rect(center=(box.centerx, box.y + 55)))
 
-            hint = pygame.font.SysFont("Segoe UI", 20).render(
-                "Oui : Entrée / Y     —     Non : N / Échap",
-                True,
-                (190, 190, 190),
-            )
+            hint = pygame.font.SysFont("Segoe UI", 20).render("Oui : Entrée / Y     —     Non : N / Échap", True, (190, 190, 190))
             screen.blit(hint, hint.get_rect(center=(box.centerx, box.y + 120)))
 
-        # Fade-out élégant (sortie)
+        # Fade-out élégant
         if fading_out:
             fade_alpha = min(255, fade_alpha + FADE_SPEED)
             fade = pygame.Surface((W, H))
             fade.fill((0, 0, 0))
             fade.set_alpha(fade_alpha)
             screen.blit(fade, (0, 0))
-
             if fade_alpha >= 255:
                 running = False
 
