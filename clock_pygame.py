@@ -3,9 +3,7 @@ import time
 import pygame
 import pygame.gfxdraw
 
-# -----------------------------
 # Helpers
-# -----------------------------
 def polar_to_xy(cx, cy, radius, angle_rad):
     """0 rad = en haut (12h). Sens horaire."""
     x = cx + radius * math.sin(angle_rad)
@@ -89,9 +87,7 @@ def parse_hms(s):
         raise ValueError("Heure invalide (0-23 / 0-59 / 0-59)")
     return h, m, sec
 
-# -----------------------------
 # UI
-# -----------------------------
 class Button:
     def __init__(self, rect, text, font):
         self.rect = pygame.Rect(rect)
@@ -153,9 +149,7 @@ class TextBox:
     def get_value(self):
         return self.text.strip()
 
-# -----------------------------
 # Main
-# -----------------------------
 def main():
     pygame.init()
     pygame.display.set_caption("Horloge Moderne (noir/or) - complète")
@@ -252,9 +246,7 @@ def main():
     # tick 1 seconde (logique)
     last_tick_ms = pygame.time.get_ticks()
 
-    # -----------------------------
     # UI panel à droite (layout auto)
-    # -----------------------------
     panel_x = 740
     panel_w = 330
     panel_rect = pygame.Rect(panel_x, 90, panel_w, 560)
