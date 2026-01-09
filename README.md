@@ -70,6 +70,7 @@ Dans un terminal, se placer dans le dossier du projet puis exécuter :
 Les fonctionnalités suivantes font partie des bonus de l'énoncé du projet :
 - Mode d'affichage **12h / 24h** (AM / PM)
 - Mise en pause et reprise de l'horloge
+- Mise en place d'une interface graphique
 
 ## Conclusion
 
